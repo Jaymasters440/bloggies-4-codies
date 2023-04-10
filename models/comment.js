@@ -22,10 +22,10 @@ Comment.init(
         key: 'id',
       },
     },
-    post_id: {
+    blog_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'post',
+        model: 'blog',
         key: 'id',
       },
     },
@@ -33,8 +33,7 @@ Comment.init(
     date_created: {
       type: DataTypes.DATE,
       allowNull:false,
-      
-
+      defaultValue: DataTypes.NOW
     }
   },
   {
