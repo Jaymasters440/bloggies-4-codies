@@ -26,7 +26,13 @@ User.init(
       },
     },
 
-    user_name:{
+    name: {
+        type:DataTypes.STRING,
+        allowNull: false,
+
+    },
+
+    username:{
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,

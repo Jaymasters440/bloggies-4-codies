@@ -24,12 +24,7 @@ blog.init(
       }
     },
 
-    userName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        
-    },
-    textContent: {
+        textContent: {
       type: DataTypes.STRING,
       allowNull: false,
        
@@ -39,7 +34,7 @@ blog.init(
         type: DataTypes.STRING,
         allowNull: false,
     },
-    
+
     creation_date: {
       type: DataTypes.DATE,
       allowNull: false,
