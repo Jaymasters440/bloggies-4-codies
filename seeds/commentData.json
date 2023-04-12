@@ -1,27 +1,27 @@
 [
     {
-        "user_id": 1,
+        "user_id": 2,
         "comment": "Cats are only cute because they want to eat you",
-        "blog_id": ""
+        "blog_id": 1
     },
 
     {
-        "user_id": 3,
+        "user_id": 4,
         "comment": "Your dog is weird.",
-        "blog_id": ""
+        "blog_id": 3
     },
 
     
     {
         "user_id": 2,
         "comment": "Your dog might have trauma issues",
-        "blog_id": ""   
+        "blog_id": 4   
     },
 
     {
         "user_id": 4,
         "comment": "How can you hate such a cute fluffy creature?",
-        "blog_id": ""
+        "blog_id": 2
     }
 
 ]
