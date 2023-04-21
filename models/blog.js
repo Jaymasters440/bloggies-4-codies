@@ -38,7 +38,7 @@ blog.init(
     creation_date: {
       type: DataTypes.DATE,
       allowNull: false,
-      
+      defaultValue: DataType.NOW,
     },
   },
   {
