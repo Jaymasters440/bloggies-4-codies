@@ -2,6 +2,8 @@ const router = require("express").Router();
 const { User, Blog, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 
+
+
 //page rendering routes
 router.get('/login', (req, res) => {
     if (req.session.logged_in) {
@@ -9,7 +11,17 @@ router.get('/login', (req, res) => {
         return;
     }
     res.render('login');
-})
+});
+
+router.get('/', (req, res) => {
+    if (req.session.logged_out) {
+    res.redirect('login');
+    return;
+    }
+    res.render("login")
+});
+
+
 
 
 //login and logout
@@ -83,6 +95,21 @@ router.post('/api/blog/', async (req, res) => {
     }
 });
 
+router.get('/api/blog/:id', async (req, res) => {
+    try {
+        const blogData = await Blog.findByPk(req.params.id, {
+            include: [{ model: User }, { model: Comment}],
+        });
+
+        if (!blogData) {
+            res.status(200).json(blogData);
+        }
+    }
+        catch (err) {
+            res.status(500).json(err);
+        }
+});
+
 router.get('/api/blog/', async (req, res) => {
     try {
         const blogData = await Blog.findAll({
@@ -124,12 +151,12 @@ router.delete('/api/blog/:id', async (req, res) => {
 });
 
 //comment post, put, get, delete
-router.post('/api/comment/:id', async (req, res) => {
+router.post('/api/comment/', async (req, res) => {
     try {
         const commentData = await Comment.findByPk(req.params.id);
 
         if (!commentData) {
-            res.status(200).json(blogData);
+            res.status(200).json(commentData);
         }
     }
         catch (err){
@@ -137,12 +164,27 @@ router.post('/api/comment/:id', async (req, res) => {
         }
 });
 
+router.get('/api/comment/', async (req, res) => {
+    try {
+        const getAllComments = await Comment.findAll({
+            include: [{ model: User }, { model: Blog}],
+        });
+        res.status(200).json(getAllComments);
+    }
+    catch (err){
+        res.status(500).json(err);
+    }
+}
+    )
+
 router.get('/api/comment/:id', async (req, res) => {
     try {
-        const commentData = await Comment.findByPk(req.params.id);
+        const commentData = await Comment.findByPk(req.params.id, {
+            include: [{ model: User }, { model: Blog}],
+        });
 
         if (!commentData) {
-            res.status(200).json(blogData);
+            res.status(200).json(commentData);
         }
     }
         catch (err) {
@@ -155,7 +197,7 @@ router.put('/api/comment/:id', async (req, res) => {
         const commentData = await Comment.findByPk(req.params.id);
 
         if (!commentData) {
-            res.status(200).json(blogData);
+            res.status(200).json(commentData);
         }
     }
         catch (err) {
