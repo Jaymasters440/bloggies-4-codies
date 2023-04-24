@@ -16,7 +16,7 @@ blog.init(
      
     },
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references:{
         model:"user",
@@ -38,7 +38,7 @@ blog.init(
     creation_date: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataType.NOW,
+      defaultValue: DataTypes.NOW,
     },
   },
   {

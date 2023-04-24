@@ -13,12 +13,15 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
-router.get('/', (req, res) => {
-    if (req.session.logged_out) {
-    res.redirect('login');
-    return;
+router.get('/', async (req, res) => {
+    try {
+        const blogs = await Blog.findAll();
+    res.render("homepage", blogs)
     }
-    res.render("login")
+    catch(err) {
+        res.status(400).json(err);
+    }
+    
 });
 
 
