@@ -15,17 +15,61 @@ router.get('/login', (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const blogs = await Blog.findAll();
-    res.render("homepage", blogs)
+        
+        //const blogs = await Blog.findAll({plain: true});
+
+        const blogs = await Blog.findAll({
+            include: [{ model: User }, { model: Comment}],
+            //raw:true
+        });
+        const blogData = blogs.map((blog) => blog.get({ plain: true }));
+
+        console.log("THESE ARE BLOGS", blogData);
+        //res.status(200).json(blogs);
+            res.render('homepage', {blogData});
     }
     catch(err) {
         res.status(400).json(err);
     }
+});   
     
+
+router.get('/blog/:id', async (req, res) => {
+    try {
+      const blogData = await Blog.findByPk(req.params.id, {
+        include: [
+          {
+            model: User,
+            attributes: ['name'],
+          },
+        ],
+      });
+  
+      const blog = blogData.get({ plain: true });
+
+      //if logged in user is author of blog, render page edit-blog
+
+      res.render('view-blog', {
+        ...blog,
+        logged_in: req.session.logged_in
+      });
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+router.get('/blog', async (req, res) => {
+    try {
+
+        
+        // const blogs = await Blog.findByPk(req.params.id,{plain: true});
+        //res.status(200).json(blogs);
+            res.redirect('/');
+    }
+    catch(err) {
+        res.status(400).json(err);
+    }
 });
-
-
-
 
 //login and logout
 router.post('/api/user/login', async (req, res) => {
