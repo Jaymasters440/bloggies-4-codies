@@ -22,21 +22,20 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" id = "homepage">Home</a>
+          <a class="nav-link active" aria-current="page" id = "homepage" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id = "dashboard">Dashboard</a>
+          <a class="nav-link" id = "dashboard" href="/dashboard">Dashboard</a>
         </li>
         {{#if logged_in}}
         <li class="nav-item">
-          <a class="nav-link" id = "logout">Logout</a>
+          <a class="nav-link" id = "logout" href="/logout">Logout</a>
+        </li>
+                {{else}}
+        <li class="nav-item">
+          <a class="nav-link" id = "login" href="/login">Login</a>
         </li>
         {{/if}}
-        {{#else}}
-        <li class="nav-item">
-          <a class="nav-link" id = "login">Login</a>
-        </li>
-        {{/else}}
       </ul>
     </div>
   </div>

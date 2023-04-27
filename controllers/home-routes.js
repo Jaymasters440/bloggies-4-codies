@@ -15,61 +15,89 @@ router.get('/login', (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        
+
         //const blogs = await Blog.findAll({plain: true});
 
-        const blogs = await Blog.findAll({
-            include: [{ model: User }, { model: Comment}],
+        const blogData = await Blog.findAll({
+            include: [{ model: User }, { model: Comment }],
             //raw:true
         });
-        const blogData = blogs.map((blog) => blog.get({ plain: true }));
+        const blogs = blogData.map((blog) => blog.get({ plain: true }));
 
-        console.log("THESE ARE BLOGS", blogData);
         //res.status(200).json(blogs);
-            res.render('homepage', {blogData});
+        res.render('homepage', { blogs });
     }
-    catch(err) {
+    catch (err) {
         res.status(400).json(err);
     }
-});   
-    
+});
+
 
 router.get('/blog/:id', async (req, res) => {
     try {
-      const blogData = await Blog.findByPk(req.params.id, {
-        include: [
-          {
-            model: User,
-            attributes: ['name'],
-          },
-        ],
-      });
-  
-      const blog = blogData.get({ plain: true });
+        const blogData = await Blog.findByPk(req.params.id, {
+            include: [
+                {
+                    model: User,
+                    attributes: ['name'],
+                },
+                {
+                    model: Comment,
+                }
+            ],
+        });
 
-      //if logged in user is author of blog, render page edit-blog
+        const blog = blogData.get({ plain: true });
 
-      res.render('view-blog', {
-        ...blog,
-        logged_in: req.session.logged_in
-      });
+        //if logged in user is author of blog, render page edit-blog
+        if (req.session.logged_in && req.session.user_id == blog.user_id) {
+            res.render('edit-blog', {
+                ...blog,
+                logged_in: req.session.logged_in
+            });
+        } else {
+            res.render('view-blog', {
+                ...blog,
+                logged_in: req.session.logged_in
+            });
+        }
     } catch (err) {
-      res.status(500).json(err);
+        res.status(500).json(err);
     }
-  });
+});
 
 router.get('/blog', async (req, res) => {
     try {
 
-        
+
         // const blogs = await Blog.findByPk(req.params.id,{plain: true});
         //res.status(200).json(blogs);
-            res.redirect('/');
+        res.redirect('/');
     }
-    catch(err) {
+    catch (err) {
         res.status(400).json(err);
     }
 });
+
+router.get('/signup', (req, res) => {
+    if (req.session.logged_in) {
+        res.redirect('/');
+        return;
+    }
+    res.render('signup');
+});
+
+router.get('/create', withAuth,(req, res) => {
+     //authorization
+    res.render('create-blog');
+});
+
+router.get('/dashboard', withAuth,(req, res) => {
+    //authorization
+   res.render('dashboard');
+});
+
+
 
 //login and logout
 router.post('/api/user/login', async (req, res) => {
@@ -145,25 +173,25 @@ router.post('/api/blog/', async (req, res) => {
 router.get('/api/blog/:id', async (req, res) => {
     try {
         const blogData = await Blog.findByPk(req.params.id, {
-            include: [{ model: User }, { model: Comment}],
+            include: [{ model: User }, { model: Comment }],
         });
 
         if (!blogData) {
             res.status(200).json(blogData);
         }
     }
-        catch (err) {
-            res.status(500).json(err);
-        }
+    catch (err) {
+        res.status(500).json(err);
+    }
 });
 
 router.get('/api/blog/', async (req, res) => {
     try {
         const blogData = await Blog.findAll({
-            include: [{ model: User }, { model: Comment}],
+            include: [{ model: User }, { model: Comment }],
         });
         res.status(200).json(blogData);
-    }   catch (err) {
+    } catch (err) {
         res.status(500).json(err);
 
     }
@@ -173,12 +201,12 @@ router.put('/api/blog/:id', async (req, res) => {
     try {
         const blogData = await Blog.update({
             textContent: req.body.textContent,
-            title: req.body.title    
+            title: req.body.title
         });
-        
+
         res.status(200).json(blogData);
-        
-    }   catch (err) {
+
+    } catch (err) {
         res.status(500).json(err);
     }
 });
@@ -186,13 +214,13 @@ router.put('/api/blog/:id', async (req, res) => {
 router.delete('/api/blog/:id', async (req, res) => {
     try {
         const blogData = await Blog.findByPk(req.params.id);
-        
+
         if (!blogData) {
-            res.status(404).json({message: "No blog found with that id"});
+            res.status(404).json({ message: "No blog found with that id" });
         }
         blogData.destroy();
         res.status(200).json(blogData);
-    }   catch (err) {
+    } catch (err) {
         res.status(500).json(err);
     }
 });
@@ -206,37 +234,37 @@ router.post('/api/comment/', async (req, res) => {
             res.status(200).json(commentData);
         }
     }
-        catch (err){
-            res.status(500).json(err);   
-        }
+    catch (err) {
+        res.status(500).json(err);
+    }
 });
 
 router.get('/api/comment/', async (req, res) => {
     try {
         const getAllComments = await Comment.findAll({
-            include: [{ model: User }, { model: Blog}],
+            include: [{ model: User }, { model: Blog }],
         });
         res.status(200).json(getAllComments);
     }
-    catch (err){
+    catch (err) {
         res.status(500).json(err);
     }
 }
-    )
+)
 
 router.get('/api/comment/:id', async (req, res) => {
     try {
         const commentData = await Comment.findByPk(req.params.id, {
-            include: [{ model: User }, { model: Blog}],
+            include: [{ model: User }, { model: Blog }],
         });
 
         if (!commentData) {
             res.status(200).json(commentData);
         }
     }
-        catch (err) {
-            res.status(500).json(err);
-        }
+    catch (err) {
+        res.status(500).json(err);
+    }
 });
 
 router.put('/api/comment/:id', async (req, res) => {
@@ -247,21 +275,21 @@ router.put('/api/comment/:id', async (req, res) => {
             res.status(200).json(commentData);
         }
     }
-        catch (err) {
-            res.status(500).json(err);
-        }
+    catch (err) {
+        res.status(500).json(err);
+    }
 });
 
 router.delete('/api/comment/:id', async (req, res) => {
     try {
         const commentData = await Blog.findByPk(req.params.id);
-        
+
         if (!commentData) {
-            res.status(404).json({message: "No comment found with that id"});
+            res.status(404).json({ message: "No comment found with that id" });
         }
         commentData.destroy();
         res.status(200).json(commentData);
-    }   catch (err) {
+    } catch (err) {
         res.status(500).json(err);
     }
 });
