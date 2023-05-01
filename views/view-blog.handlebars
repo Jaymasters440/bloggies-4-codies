@@ -1,11 +1,30 @@
-<div>
-    <div>
-        <h1>{{title}}</h1>
-        <h2>{{author}}</h2>
-        <h2>{{text}}</h2>
-        <div>
-            <h2>{{comment}}</h2>
-            <h2>{{time}}</h2>
-        </div>
+<div class="card text-center">
+    <div class="card-body">
+        <h1 class="card-title">{{title}}</h1>
+        <p class="card-text"><small class="text-muted">{{user.name}}</small></p>
+        <h2 class="card-text">{{textContent}}</h2>
     </div>
+
+        <div class="card-footer">
+            
+            <p><small class="text-muted">{{creation_date}}</small></p>
+        </div>
+    
 </div>
+<br>
+<h4 class="text-center">--comments--</h4>
+
+{{#if comments}} 
+
+
+
+{{#each comments as |comment|}} 
+{{!-- //{{> blog.blog-details}}// --}}
+{{!-- <h2>{{blog.title}}</h2> --}}
+{{> comment-details}}
+
+
+{{/each}}
+{{else}}
+<h3>No comments</h3>
+{{/if}}

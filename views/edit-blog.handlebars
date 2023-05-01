@@ -6,18 +6,35 @@
 
         <form class="form new-post-form" id="new-post-form">
             <div class="form-group">
-                <label for="title-new-post">Blog Name: {{blog.title}}</label>
-                <input class="form-input" type="text" id="title-new-post" name="title-new-post" />
+                <label for="title-new-post">Blog Name:</label>
+                <input class="form-input" type="text" id="title-new-post" name="title-new-post" value='{{title}}'></input>
             </div>
             <div class="form-group">
                 <label for="content-new-post">Content:</label>
-                <textarea class="form-input" id="content-new-post" name="content-new-post"></textarea>
+                <textarea class="form-input" id="content-new-post" name="content-new-post">{{textContent}}</textarea>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary">submit</button>
             </div>
         </form>
     </div>
 </div>
-<script src="../public/js/upload-profile-picture.js"></script>
-<script src="/js/new-post.js"></script>
+
+<br>
+<h4 class="text-center">--comments--</h4>
+
+{{#if comments}} 
+
+
+
+{{#each comments as |comment|}} 
+{{!-- //{{> blog.blog-details}}// --}}
+{{!-- <h2>{{blog.title}}</h2> --}}
+{{> comment-details}}
+
+
+{{/each}}
+{{else}}
+<h3>No comments</h3>
+{{/if}}
+<script src="/js/edit-blog.js"></script>

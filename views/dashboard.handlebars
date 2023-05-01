@@ -1,0 +1,18 @@
+{{!-- <h1>{{blogs.json}}</h1> --}}
+{{#if blogs}} 
+
+
+
+{{#each blogs as |blog|}} 
+{{!-- //{{> blog.blog-details}}// --}}
+{{!-- <h2>{{blog.title}}</h2> --}}
+{{> blog-details}}
+
+
+{{/each}}
+{{else}}
+<h3>No Data</h3>
+{{/if}}
+
+
+

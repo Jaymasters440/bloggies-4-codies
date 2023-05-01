@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const session = require("express-session");
 const { User, Blog, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 
@@ -25,7 +26,29 @@ router.get('/', async (req, res) => {
         const blogs = blogData.map((blog) => blog.get({ plain: true }));
 
         //res.status(200).json(blogs);
-        res.render('homepage', { blogs });
+        res.render('homepage', { blogs,  logged_in:req.session.logged_in });
+    }
+    catch (err) {
+        res.status(400).json(err);
+    }
+});
+
+router.get('/dashboard', async (req, res) => {
+    try {
+
+        //const blogs = await Blog.findAll({plain: true});
+
+        const blogData = await Blog.findAll({
+            include: [{ model: User }, { model: Comment }],
+            where:{
+                user_id:req.session.user_id
+            }
+            //raw:true
+        });
+        const blogs = blogData.map((blog) => blog.get({ plain: true }));
+
+        //res.status(200).json(blogs);
+        res.render('dashboard', { blogs,  logged_in:req.session.logged_in });
     }
     catch (err) {
         res.status(400).json(err);
@@ -36,15 +59,7 @@ router.get('/', async (req, res) => {
 router.get('/blog/:id', async (req, res) => {
     try {
         const blogData = await Blog.findByPk(req.params.id, {
-            include: [
-                {
-                    model: User,
-                    attributes: ['name'],
-                },
-                {
-                    model: Comment,
-                }
-            ],
+            include: {all:true,nested:true}
         });
 
         const blog = blogData.get({ plain: true });
@@ -131,6 +146,16 @@ router.post('/api/user/login', async (req, res) => {
     }
 });
 
+router.post('api/user/logout', (req, res) => {
+    if (req.session.logged_in) {
+      req.session.destroy(() => {
+        res.status(204).end();
+      });
+    } else {
+      res.status(404).end();
+    }
+  });
+
 
 //user post, get
 router.post('/api/user/', async (req, res) => {
@@ -173,12 +198,13 @@ router.post('/api/blog/', async (req, res) => {
 router.get('/api/blog/:id', async (req, res) => {
     try {
         const blogData = await Blog.findByPk(req.params.id, {
-            include: [{ model: User }, { model: Comment }],
+            include: {all:true,nested:true},
         });
 
         if (!blogData) {
-            res.status(200).json(blogData);
+            res.status(404).json({message:"No blog with that ID"});
         }
+        res.status(200).json(blogData);
     }
     catch (err) {
         res.status(500).json(err);
