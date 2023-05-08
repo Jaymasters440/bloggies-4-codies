@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/dashboard', async (req, res) => {
+router.get('/blog/dashboard', withAuth, async (req, res) => {
     try {
 
         //const blogs = await Blog.findAll({plain: true});
@@ -107,10 +107,7 @@ router.get('/create', withAuth,(req, res) => {
     res.render('create-blog');
 });
 
-router.get('/dashboard', withAuth,(req, res) => {
-    //authorization
-   res.render('dashboard');
-});
+
 
 
 
@@ -183,7 +180,7 @@ router.post('/api/user/', async (req, res) => {
 router.post('/api/blog/', async (req, res) => {
     try {
         const dbBlogData = await Blog.create({
-            user_id: req.body.user_id,
+            user_id: req.session.user_id,
             textContent: req.body.textContent,
             title: req.body.title
         });
@@ -225,9 +222,10 @@ router.get('/api/blog/', async (req, res) => {
 
 router.put('/api/blog/:id', async (req, res) => {
     try {
-        const blogData = await Blog.update({
-            textContent: req.body.textContent,
-            title: req.body.title
+        const blogData = await Blog.update(req.body,{
+            //textContent: req.body.textContent,
+            where:{id:req.params.id},
+            //title: req.body.title
         });
 
         res.status(200).json(blogData);

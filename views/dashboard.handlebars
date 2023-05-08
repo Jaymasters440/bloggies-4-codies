@@ -1,9 +1,9 @@
 {{!-- <h1>{{blogs.json}}</h1> --}}
-{{#if blogs}} 
+{{#if blogs}}
 
 
 
-{{#each blogs as |blog|}} 
+{{#each blogs as |blog|}}
 {{!-- //{{> blog.blog-details}}// --}}
 {{!-- <h2>{{blog.title}}</h2> --}}
 {{> blog-details}}
@@ -14,5 +14,9 @@
 <h3>No Data</h3>
 {{/if}}
 
-
-
+<div>
+    <a href="/create">
+        <button class="btn btn-primary">Create post</button>
+    </a>
+    
+</div>

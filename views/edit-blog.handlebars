@@ -7,7 +7,7 @@
         <form class="form new-post-form" id="new-post-form">
             <div class="form-group">
                 <label for="title-new-post">Blog Name:</label>
-                <input class="form-input" type="text" id="title-new-post" name="title-new-post" value='{{title}}'></input>
+                <input class="form-input" type="text" id="title-new-post" name={{id}} value='{{title}}'></input>
             </div>
             <div class="form-group">
                 <label for="content-new-post">Content:</label>
@@ -37,4 +37,7 @@
 {{else}}
 <h3>No comments</h3>
 {{/if}}
+<div class="form-group">
+                <button type="submit" class="btn btn-primary">Add comment</button>
+            </div>
 <script src="/js/edit-blog.js"></script>

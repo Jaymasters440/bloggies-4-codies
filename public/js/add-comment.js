@@ -1,13 +1,14 @@
-const createFormHandler = async (event) => {
+const commentFormHandler = async (event) => {
     event.preventDefault();
-    const title = document.querySelector('#title-new-post').value.trim();
-    const text = document.querySelector('#content-new-post').value.trim();
+    const title = document.querySelector('#content-user_id-blog_id').value.trim();
+    const text = document.querySelector('#content-user_id-blog_id').value.trim();
 
     if (title && text) {
-        const response = await fetch('/api/blog', {
+        const response = await fetch('/api/comment.js', {
             method: 'POST',
             body: JSON.stringify({
                 title,
+                user_id,
                 textContent: text
             }),
 
@@ -16,9 +17,9 @@ const createFormHandler = async (event) => {
         );
 
         if (response.ok) {
-            document.location.replace('dashboard');
+            document.location.replace('comment');
         } else {
-            alert('Failed to create blog')
+            alert('Failed add comment')
         }
     } else {
         alert( "Please enter valid information")
