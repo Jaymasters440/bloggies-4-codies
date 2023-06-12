@@ -1,8 +1,7 @@
 <h2>Edit Post</h2>
 <div class="row mt-4">
     <div class="col-md-6">
-        <h3>Edit your post</h3>
-
+        
 
         <form class="form new-post-form" id="new-post-form">
             <div class="form-group">
@@ -21,23 +20,5 @@
 </div>
 
 <br>
-<h4 class="text-center">--comments--</h4>
 
-{{#if comments}} 
-
-
-
-{{#each comments as |comment|}} 
-{{!-- //{{> blog.blog-details}}// --}}
-{{!-- <h2>{{blog.title}}</h2> --}}
-{{> comment-details}}
-
-
-{{/each}}
-{{else}}
-<h3>No comments</h3>
-{{/if}}
-<div class="form-group">
-                <button type="submit" class="btn btn-primary">Add comment</button>
-            </div>
 <script src="/js/edit-blog.js"></script>

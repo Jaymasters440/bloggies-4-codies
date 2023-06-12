@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         const blogs = blogData.map((blog) => blog.get({ plain: true }));
 
         //res.status(200).json(blogs);
-        res.render('homepage', { blogs,  logged_in:req.session.logged_in });
+        res.render('homepage', { blogs, logged_in: req.session.logged_in });
     }
     catch (err) {
         res.status(400).json(err);
@@ -40,15 +40,15 @@ router.get('/blog/dashboard', withAuth, async (req, res) => {
 
         const blogData = await Blog.findAll({
             include: [{ model: User }, { model: Comment }],
-            where:{
-                user_id:req.session.user_id
+            where: {
+                user_id: req.session.user_id
             }
             //raw:true
         });
         const blogs = blogData.map((blog) => blog.get({ plain: true }));
 
         //res.status(200).json(blogs);
-        res.render('dashboard', { blogs,  logged_in:req.session.logged_in });
+        res.render('dashboard', { blogs, logged_in: req.session.logged_in });
     }
     catch (err) {
         res.status(400).json(err);
@@ -59,7 +59,7 @@ router.get('/blog/dashboard', withAuth, async (req, res) => {
 router.get('/blog/:id', async (req, res) => {
     try {
         const blogData = await Blog.findByPk(req.params.id, {
-            include: {all:true,nested:true}
+            include: { all: true, nested: true }
         });
 
         const blog = blogData.get({ plain: true });
@@ -102,8 +102,8 @@ router.get('/signup', (req, res) => {
     res.render('signup');
 });
 
-router.get('/create', withAuth,(req, res) => {
-     //authorization
+router.get('/create', withAuth, (req, res) => {
+    //authorization
     res.render('create-blog');
 });
 
@@ -145,14 +145,24 @@ router.post('/api/user/login', async (req, res) => {
 
 router.post('api/user/logout', (req, res) => {
     if (req.session.logged_in) {
-      req.session.destroy(() => {
-        res.status(204).end();
-      });
+        req.session.destroy(() => {
+            res.status(204).end();
+        });
     } else {
-      res.status(404).end();
+        res.status(404).end();
     }
-  });
+});
 
+router.get('/api/user/' , async (req, res) => {
+    try {
+        const userData =await User.findAll({
+            insclude: [{model: Blog}, {model: Comment }],
+        });
+        res.status(200).json(userData);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 //user post, get
 router.post('/api/user/', async (req, res) => {
@@ -195,11 +205,11 @@ router.post('/api/blog/', async (req, res) => {
 router.get('/api/blog/:id', async (req, res) => {
     try {
         const blogData = await Blog.findByPk(req.params.id, {
-            include: {all:true,nested:true},
+            include: { all: true, nested: true },
         });
 
         if (!blogData) {
-            res.status(404).json({message:"No blog with that ID"});
+            res.status(404).json({ message: "No blog with that ID" });
         }
         res.status(200).json(blogData);
     }
@@ -222,9 +232,9 @@ router.get('/api/blog/', async (req, res) => {
 
 router.put('/api/blog/:id', async (req, res) => {
     try {
-        const blogData = await Blog.update(req.body,{
+        const blogData = await Blog.update(req.body, {
             //textContent: req.body.textContent,
-            where:{id:req.params.id},
+            where: { id: req.params.id },
             //title: req.body.title
         });
 
@@ -252,11 +262,17 @@ router.delete('/api/blog/:id', async (req, res) => {
 //comment post, put, get, delete
 router.post('/api/comment/', async (req, res) => {
     try {
-        const commentData = await Comment.findByPk(req.params.id);
-
-        if (!commentData) {
-            res.status(200).json(commentData);
+        const dbCommentData = await Comment.create({
+            user_id: req.session.user_id,
+            content: req.body.textContent,
+            blog_id: req.body.blog_id
         }
+
+        );
+
+
+        res.status(200).json(dbCommentData);
+
     }
     catch (err) {
         res.status(500).json(err);

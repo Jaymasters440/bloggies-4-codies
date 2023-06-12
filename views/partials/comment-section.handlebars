@@ -1,0 +1,35 @@
+<h4 class="text-center">--comments--</h4>
+
+{{#if comments}}
+
+
+
+{{#each comments as |comment|}}
+{{!-- //{{> blog.blog-details}}// --}}
+{{!-- <h2>{{blog.title}}</h2> --}}
+{{> comment-details}}
+
+
+{{/each}}
+{{else}}
+<h3>No comments</h3>
+{{/if}}
+
+{{#if logged_in}}
+<button id="comment-button" class="btn btn-primary">Add comment</button>
+
+{{/if}}
+
+<form class="form new-content" id="new-comment" style="visibility: hidden:">
+    <div class="form-group">
+        <label for="comment-text">Comment:</label>
+        <textarea class="form_input" id="comment-text" name="comment-text"></textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">submit</button>
+
+    </div>
+</form>
+
+
+<script src="/js/add-comment.js"></script>
