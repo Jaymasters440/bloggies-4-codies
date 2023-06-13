@@ -1,15 +1,14 @@
 const commentFormHandler = async (event) => {
     event.preventDefault();
-    const title = document.querySelector('#content-user_id-blog_id').value.trim();
-    const text = document.querySelector('#content-user_id-blog_id').value.trim();
+    const comment = document.querySelector('#comment-text').value.trim();
+    const blog_id = document.querySelector('#title').getAttribute('name');
 
-    if (title && text) {
-        const response = await fetch('/api/comment.js', {
+    if (comment) {
+        const response = await fetch('/api/comment', {
             method: 'POST',
             body: JSON.stringify({
-                title,
-                user_id,
-                textContent: text
+                blog_id,
+                textContent: comment
             }),
 
             headers: { 'Content-Type': 'application/json' },
@@ -17,7 +16,7 @@ const commentFormHandler = async (event) => {
         );
 
         if (response.ok) {
-            document.location.replace('comment');
+            location.reload();
         } else {
             alert('Failed add comment')
         }
@@ -26,6 +25,16 @@ const commentFormHandler = async (event) => {
     }
 };
 
+const displayInput = () => {
+    document.querySelector('.new-comment').style.visibility = "visible";
+    
+    document
+    .querySelector('.new-comment')
+    .addEventListener('submit', commentFormHandler);
+
+}
+
+
 document
-    .querySelector('.new-post-form')
-    .addEventListener('submit', createFormHandler);
+    .querySelector('#comment-button')
+    .addEventListener("click",displayInput);

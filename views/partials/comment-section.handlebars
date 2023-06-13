@@ -17,19 +17,19 @@
 
 {{#if logged_in}}
 <button id="comment-button" class="btn btn-primary">Add comment</button>
-
 {{/if}}
 
-<form class="form new-content" id="new-comment" style="visibility: hidden:">
+<form class="form new-comment" id="new-comment" style="visibility: hidden;">
     <div class="form-group">
         <label for="comment-text">Comment:</label>
-        <textarea class="form_input" id="comment-text" name="comment-text"></textarea>
+        <textarea class="form-input" id="comment-text" name="comment-text"></textarea>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">submit</button>
-
     </div>
 </form>
+
+
 
 
 <script src="/js/add-comment.js"></script>
