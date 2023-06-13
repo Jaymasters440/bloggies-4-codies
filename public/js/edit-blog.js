@@ -3,7 +3,7 @@ const editFormHandler = async (event) => {
     const title = document.querySelector('#title-new-post').value.trim();
     const text = document.querySelector('#content-new-post').value.trim();
     console.log(title+text);
-    const id = document.querySelector('#title-new-post').getAttribute('name');
+    const id = document.querySelector('#title').getAttribute('name');
 
     if (title && text) {
         const response = await fetch(`/api/blog/${id}`, {
